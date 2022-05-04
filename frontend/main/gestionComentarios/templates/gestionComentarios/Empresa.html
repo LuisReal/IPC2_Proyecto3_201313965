@@ -4,23 +4,27 @@
 </head>
 <body>
     <h1 style="text-align: center;">Empresa {{nombre}}</h1>
+        
+    
+    <form method= "POST" enctype="multipart/form-data" >
+        {% csrf_token %}
 
-    <div style="display: flex; padding-left: 5px; justify-content: space-evenly; ">
-        <input type="submit" value="Cargar Archivo">
-        <input type="submit" value="Peticiones">
-        <input type="submit" value="Ayuda">
-    </div>
-    <form method= "POST" >
+        <div style="display: flex; padding-left: 5px; justify-content: space-evenly; ">
+            <input type="file" id="archivo1" name="file" value="Cargar Archivo" style="padding:5; background-color:aqua; color: black; font-size: 15; border-radius: 5%; border-color: white;">
+            <input type="submit" value="Peticiones" style=" padding: 5; background-color: gold; color: white; font-size: 15; border-radius: 15%;  border-color: white;">
+            <input type="submit" value="Ayuda" style=" padding: 5; background-color: orange; color: white; font-size: 15; border-radius: 15%;  border-color: white;">
+        </div>
+
         <div class="row" style ="display: flex; margin-top: 20px;">
             <div class ="col" style ="padding-right: 5%; padding-left: 3%;">
-                <textarea style="width: 500px; height: 500px; border-radius: 3%; border-color: greenyellow;"></textarea>
+                <textarea id="textarea1" name="textarea1" style="width: 500px; height: 500px; border-radius: 3%; border-color: greenyellow;">{{archivo}}</textarea>
             </div>
             <div class ="col" style ="padding: 3% ;">
                 <input type="submit" value="Enviar" style="margin-top: 100%; background-color: green; color: white; font-size: 15; border-radius: 20%; padding: 10px; border-color: white;">
                 <input type="submit" value="Reset" style="margin-top: 100%; background-color: red; color: white; font-size: 15; border-radius: 20%; padding: 10px; border-color: white;">
             </div>
             <div class ="col" style ="padding-left: 5%;">
-                <textarea style="width: 500px; height: 500px; border-radius: 3%; border-color: aqua;"></textarea>
+                <textarea style="width: 500px; height: 500px; border-radius: 3%; border-color: aqua;">{{result}}</textarea>
             </div>
         </div>
     </form>
