@@ -1,5 +1,4 @@
-import json
-import re
+
 import xml.etree.ElementTree as ET
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -28,17 +27,20 @@ def palabras(requests):
             datos = str(chunk)
         
         
-        resultado = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")
-        print(resultado)
-        root = ET.fromstring(resultado)
+        archivo = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")
         
+        root = ET.fromstring(archivo)
+    
+        for dato in root.findall('./diccionario/sentimientos_positivos'): 
+            
+            nombre = dato.find('./palabra').text
+            print("el nombre del sentimiento positivo es: ", nombre)
+        
+        sendInfo(archivo)
     
     info = datos.replace("\\r\\n", "\r\n")
 
-    
-    sendInfo(info)
-
-    context = {"result": result, "nombre": "Tecnologias Chapinas", "archivo": info} 
+    context = {"result": result, "nombre": "Tecnologias Chapinas", "info": info} 
     return render(requests, "gestionComentarios/Empresa.html", context)
 
 def sendInfo(archivo):
