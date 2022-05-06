@@ -1,5 +1,5 @@
 class Mensaje:
-    def __init__(self, nombre_empresa, positivos, negativos, neutros, total, servicio, fecha):
+    def __init__(self, nombre_empresa, positivos, negativos, neutros, total, servicio, fecha, total_positivos, total_negativos):
         self.nombre_empresa = nombre_empresa
         self.positivos = positivos
         self.negativos = negativos
@@ -7,6 +7,8 @@ class Mensaje:
         self.total = total
         self.servicio = servicio
         self.fecha = fecha
+        self.total_positivos = total_positivos
+        self.total_negativos = total_negativos
 
     def getNombre(self):
         return self.nombre_empresa
@@ -22,6 +24,12 @@ class Mensaje:
 
     def getTotal(self):
         return self.total
+
+    def getTotalPositivos(self):
+        return self.total_positivos
+
+    def getTotalNegativos(self):
+        return self.total_negativos
     
     def getServicio(self):
         return self.servicio
@@ -40,6 +48,12 @@ class Mensaje:
 
     def setTotal(self, total):
         self.total = total
+
+    def setTotalPositivos(self, total):
+        self.total_positivos = total
+
+    def setTotalNegativos(self, total):
+        self.total_negativos = total
     
     def setServicio(self, servicio):
         self.servicio = servicio

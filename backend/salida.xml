@@ -3,27 +3,87 @@
        <fecha>01/05/2022</fecha>
            <mensajes>
            <total>7</total>
-               <positivos>0</positivos>
-               <negativos>0</negativos>
+               <positivos>4</positivos>
+               <negativos>3</negativos>
                <neutros>0</neutros>
            </mensajes>
+       <analisis>
+           <empresa nombre = "USAC">
+               <mensajes>
+               <total>4<total>
+               <positivos>3</positivos>
+               <negativos>1</negativos>
+               <neutros>0</neutros>
+               </mensajes>
+                   <servicios>
+                       <servicio nombre = "inscripcion">
+                           <mensajes>
+                               <total>4</total>
+                               <positivos>3</positivos>
+                               <negativos>1</negativos>
+                               <neutros></neutros>
+                           </mensajes>
+                       </servicio>
+                   </servicios>
+           </empresa>
+       </analisis>
    </respuesta>
    <respuesta>
        <fecha>01/04/2022</fecha>
            <mensajes>
            <total>2</total>
                <positivos>0</positivos>
-               <negativos>0</negativos>
+               <negativos>2</negativos>
                <neutros>0</neutros>
            </mensajes>
+       <analisis>
+           <empresa nombre = "Landivar">
+               <mensajes>
+               <total>2<total>
+               <positivos>0</positivos>
+               <negativos>2</negativos>
+               <neutros>0</neutros>
+               </mensajes>
+                   <servicios>
+                       <servicio nombre = "inscripcion">
+                           <mensajes>
+                               <total>2</total>
+                               <positivos>0</positivos>
+                               <negativos>2</negativos>
+                               <neutros></neutros>
+                           </mensajes>
+                       </servicio>
+                   </servicios>
+           </empresa>
+       </analisis>
    </respuesta>
    <respuesta>
        <fecha>01/05/2022</fecha>
            <mensajes>
            <total>7</total>
-               <positivos>0</positivos>
-               <negativos>0</negativos>
+               <positivos>4</positivos>
+               <negativos>3</negativos>
                <neutros>0</neutros>
            </mensajes>
+       <analisis>
+           <empresa nombre = "Harvard">
+               <mensajes>
+               <total>3<total>
+               <positivos>1</positivos>
+               <negativos>2</negativos>
+               <neutros>0</neutros>
+               </mensajes>
+                   <servicios>
+                       <servicio nombre = "asignacion">
+                           <mensajes>
+                               <total>3</total>
+                               <positivos>1</positivos>
+                               <negativos>2</negativos>
+                               <neutros></neutros>
+                           </mensajes>
+                       </servicio>
+                   </servicios>
+           </empresa>
+       </analisis>
    </respuesta>
 </lista_respuestas>

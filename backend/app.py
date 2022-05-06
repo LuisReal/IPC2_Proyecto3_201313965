@@ -123,7 +123,7 @@ def parseInfo():
 
             if len(x) != 0 : # si la lista x no esta vacia
                 if len(lista_resultado) == 0:
-                    lista_resultado.append(Mensaje(empresa,0,0,0,0,"",""))
+                    lista_resultado.append(Mensaje(empresa,0,0,0,0,"","",0,0))
                     print("se guardo la empresa ", empresa)
                 else:
                     existe_empresa = 0
@@ -133,7 +133,7 @@ def parseInfo():
                             existe_empresa +=1
                     
                     if existe_empresa == 0 :
-                        lista_resultado.append(Mensaje(empresa,0,0,0,0,"", ""))
+                        lista_resultado.append(Mensaje(empresa,0,0,0,0,"", "",0,0))
                         print("se guardo la empresa ", empresa)
 
                 for palabra in lista_positivo:
@@ -196,11 +196,13 @@ def parseInfo():
             if lista_resultado[f].getFecha()[0] == lista_resultado[k].getFecha()[0]:
                 #print("lista_resultado[f].getFecha()[0]: ", lista_resultado[f].getFecha()[0])
                 total_sentimientos = total_sentimientos+ lista_resultado[k].getPositivos() + lista_resultado[k].getNegativos() + contador_neutro
-                total_positivos = total_positivos + lista_resultado[f].getPositivos() + lista_resultado[k].getPositivos()
-                total_negativos = total_negativos + lista_resultado[f].getNegativos() + lista_resultado[k].getNegativos()
+                total_positivos = total_positivos + lista_resultado[k].getPositivos() 
+                total_negativos = total_negativos + lista_resultado[k].getNegativos()
                 print("total de sentimientos iterando en el for ", total_sentimientos)
         
         lista_resultado[f].setTotal(total_sentimientos)
+        lista_resultado[f].setTotalPositivos(total_positivos)
+        lista_resultado[f].setTotalNegativos(total_negativos)
 
         print("total de sentimientos en 1 iteracion: ", total_sentimientos)
         total_sentimientos = 0  
@@ -236,15 +238,50 @@ def parseInfo():
         body +=  str(lista_resultado[i].getTotal())
         body += '</total>\n'
         body += '               <positivos>'
-        body +=  str(total_positivos)
+        body +=  str(lista_resultado[i].getTotalPositivos())
         body += '</positivos>\n'
         body += '               <negativos>'
-        body +=  str(total_negativos)
+        body +=  str(lista_resultado[i].getTotalNegativos())
         body += '</negativos>\n'
         body += '               <neutros>'
         body +=  str(lista_resultado[i].getNeutros())
         body += '</neutros>\n'
         body += '           </mensajes>\n'
+        body += '       <analisis>\n'
+        body += '           <empresa nombre = "'+lista_resultado[i].getNombre()+'">\n'
+        body += '               <mensajes>\n'
+        body += '               <total>'
+        body +=  str(lista_resultado[i].getPositivos()+lista_resultado[i].getNegativos()+lista_resultado[i].getNeutros())
+        body += '<total>\n'
+        body += '               <positivos>'
+        body += str(lista_resultado[i].getPositivos())
+        body += '</positivos>\n'
+        body += '               <negativos>'
+        body += str(lista_resultado[i].getNegativos())
+        body += '</negativos>\n'
+        body += '               <neutros>'
+        body += str(lista_resultado[i].getNeutros())
+        body += '</neutros>\n'
+        body += '               </mensajes>\n'
+        body += '                   <servicios>\n'
+        body += '                       <servicio nombre = "'+lista_resultado[i].getServicio().getNombre()+'">\n'
+        body += '                           <mensajes>\n'
+        body += '                               <total>'
+        body += str(lista_resultado[i].getPositivos()+lista_resultado[i].getNegativos()+lista_resultado[i].getNeutros())
+        body += '</total>\n'
+        body += '                               <positivos>'
+        body += str(lista_resultado[i].getPositivos())
+        body += '</positivos>\n'
+        body += '                               <negativos>'
+        body += str(lista_resultado[i].getNegativos())
+        body += '</negativos>\n'
+        body += '                               <neutros>'
+        body += '</neutros>\n'
+        body += '                           </mensajes>\n'
+        body += '                       </servicio>\n'
+        body += '                   </servicios>\n'
+        body += '           </empresa>\n'
+        body += '       </analisis>\n'
         body += '   </respuesta>\n'
         
 
@@ -252,6 +289,12 @@ def parseInfo():
 
     f.write(cadena)
     f.close()
+
+    r = open('Salida.xml','r')
+    contenido = r.read()
+    print(contenido)
+    r.close()
+
 
     lista_datos = []
 
@@ -267,5 +310,7 @@ def parseInfo():
 
         lista_datos.append(Dato)
 
+    #contenido_txt = {'contenido': contenido}
+
     
-    return {'data': lista_datos}
+    return {'data': contenido}
