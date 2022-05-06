@@ -1,4 +1,5 @@
 import json
+from urllib import response
 import xml.etree.ElementTree as ET
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -27,9 +28,11 @@ def palabras(requests):
         
         archivo = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")       
         result = sendInfo(archivo)["data"] #primero envia la info y despues obtiene el resultado para enviar a la plantilla
-    
-    info = datos.replace("\\r\\n", "\r\n")
 
+    
+
+    info = datos.replace("\\r\\n", "\r\n")
+    
     context = {"result": result, "nombre": "Tecnologias Chapinas", "info": info} 
     return render(requests, "gestionComentarios/Empresa.html", context)
 

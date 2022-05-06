@@ -39,6 +39,8 @@ def parseInfo():
     contador_negativo=0
     contador_neutro=0
     total_sentimientos = 0
+    total_positivos = 0
+    total_negativos = 0
 
     lista_positivo = []
     lista_negativo = []
@@ -192,14 +194,18 @@ def parseInfo():
 
         for k in range(len(lista_resultado)):
             if lista_resultado[f].getFecha()[0] == lista_resultado[k].getFecha()[0]:
-                print("lista_resultado[f].getFecha()[0]: ", lista_resultado[f].getFecha()[0])
+                #print("lista_resultado[f].getFecha()[0]: ", lista_resultado[f].getFecha()[0])
                 total_sentimientos = total_sentimientos+ lista_resultado[k].getPositivos() + lista_resultado[k].getNegativos() + contador_neutro
+                total_positivos = total_positivos + lista_resultado[f].getPositivos() + lista_resultado[k].getPositivos()
+                total_negativos = total_negativos + lista_resultado[f].getNegativos() + lista_resultado[k].getNegativos()
                 print("total de sentimientos iterando en el for ", total_sentimientos)
         
         lista_resultado[f].setTotal(total_sentimientos)
 
         print("total de sentimientos en 1 iteracion: ", total_sentimientos)
         total_sentimientos = 0  
+        total_positivos = 0
+        total_negativos = 0
 
     for f in range(len(lista_resultado)):
 
@@ -209,6 +215,43 @@ def parseInfo():
     #str(lista_resultado[f].getNegativos())
     print("TOTAL DE SENTIMIENTOS ", total_sentimientos)
     print("CONTADOR NEUTRO ", contador_neutro)
+
+    xml = '''<lista_respuestas>
+    <respuesta>
+        <fecha>{{lista_resultado[0].getNombre()}}</fecha>'''
+
+    f = open('Salida.xml','w')
+
+    head = '<lista_respuestas>\n'
+    body = ''
+    fin = '</lista_respuestas>'
+
+    for i in range(0,len(lista_resultado)):
+        body += '   <respuesta>\n'
+        body += '       <fecha>'
+        body +=  lista_resultado[i].getFecha()[0]
+        body += '</fecha>\n'
+        body += '           <mensajes>\n'
+        body += '           <total>'
+        body +=  str(lista_resultado[i].getTotal())
+        body += '</total>\n'
+        body += '               <positivos>'
+        body +=  str(total_positivos)
+        body += '</positivos>\n'
+        body += '               <negativos>'
+        body +=  str(total_negativos)
+        body += '</negativos>\n'
+        body += '               <neutros>'
+        body +=  str(lista_resultado[i].getNeutros())
+        body += '</neutros>\n'
+        body += '           </mensajes>\n'
+        body += '   </respuesta>\n'
+        
+
+    cadena = head + body + fin
+
+    f.write(cadena)
+    f.close()
 
     lista_datos = []
 

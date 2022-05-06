@@ -1,1 +1,29 @@
-hola mundo
+<lista_respuestas>
+   <respuesta>
+       <fecha>01/05/2022</fecha>
+           <mensajes>
+           <total>7</total>
+               <positivos>0</positivos>
+               <negativos>0</negativos>
+               <neutros>0</neutros>
+           </mensajes>
+   </respuesta>
+   <respuesta>
+       <fecha>01/04/2022</fecha>
+           <mensajes>
+           <total>2</total>
+               <positivos>0</positivos>
+               <negativos>0</negativos>
+               <neutros>0</neutros>
+           </mensajes>
+   </respuesta>
+   <respuesta>
+       <fecha>01/05/2022</fecha>
+           <mensajes>
+           <total>7</total>
+               <positivos>0</positivos>
+               <negativos>0</negativos>
+               <neutros>0</neutros>
+           </mensajes>
+   </respuesta>
+</lista_respuestas>
