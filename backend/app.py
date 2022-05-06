@@ -42,12 +42,13 @@ def parseInfo():
 
     lista_positivo = []
     lista_negativo = []
-    lista_mensaje = []
+    lista_submensaje = []
     lista_empresa = []
     lista_servicio = []
     lista_alias = []
     lista_resultado = []
     lista_ali = []
+    lista_mensajes = []
     listado_empresas = []
 
     for dato in root.findall('./diccionario/empresas_analizar/empresa/nombre'): 
@@ -87,9 +88,11 @@ def parseInfo():
         
         mensaje = dato.text 
 
+        lista_mensajes.append(mensaje)
+
         indice_c = mensaje.index('Red social')
         sub = mensaje[indice_c:]
-        lista_mensaje.append(sub)
+        lista_submensaje.append(sub)
         
         
     
@@ -105,20 +108,20 @@ def parseInfo():
     print("********MENSAJES ENCONTRADOS*********")
     
     
-    for lista in range(len(lista_mensaje)):
+    for lista in range(len(lista_submensaje)):
         
         for empresa in lista_empresa:
             
             print("*******************ITERACION FOR DE EMPRESA ***************************")
             print("                     ", empresa, "                 ", str(lista), "     ")
             
-            x = re.findall(empresa, lista_mensaje[lista], flags=re.IGNORECASE)
+            x = re.findall(empresa, lista_submensaje[lista], flags=re.IGNORECASE)
         
             print("esta es la lista ",x)
 
             if len(x) != 0 : # si la lista x no esta vacia
                 if len(lista_resultado) == 0:
-                    lista_resultado.append(Mensaje(empresa,0,0,0,0,""))
+                    lista_resultado.append(Mensaje(empresa,0,0,0,0,"",""))
                     print("se guardo la empresa ", empresa)
                 else:
                     existe_empresa = 0
@@ -128,11 +131,11 @@ def parseInfo():
                             existe_empresa +=1
                     
                     if existe_empresa == 0 :
-                        lista_resultado.append(Mensaje(empresa,0,0,0,0,""))
+                        lista_resultado.append(Mensaje(empresa,0,0,0,0,"", ""))
                         print("se guardo la empresa ", empresa)
 
                 for palabra in lista_positivo:
-                    x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)   # devuelve una lista con la palabra encontrada
+                    x = re.findall(palabra, lista_submensaje[lista], flags=re.IGNORECASE)   # devuelve una lista con la palabra encontrada
             
                     if len(x) != 0:
                         contador_positivo +=1
@@ -147,7 +150,7 @@ def parseInfo():
                 print()
 
                 for palabra in lista_negativo:
-                    x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)
+                    x = re.findall(palabra, lista_submensaje[lista], flags=re.IGNORECASE)
             
                     if len(x) != 0:
                         contador_negativo +=1
@@ -160,7 +163,7 @@ def parseInfo():
                 
                 print(" EL LISTADO DE ALIAS ES ", lista_alias)
                 for alias in lista_alias:
-                    x = re.findall(alias, lista_mensaje[lista], flags=re.IGNORECASE)
+                    x = re.findall(alias, lista_submensaje[lista], flags=re.IGNORECASE)
                     
                     if len(x) != 0:
                         print("EL ALIAS ES ", alias)
@@ -172,7 +175,13 @@ def parseInfo():
                                         if lista_servicio[h].getListaServicio()[j] == alias:
                                             print("if lista_servicio[h].getListaServicio()[j] == alias", lista_servicio[h].getListaServicio()[j])
                                             lista_resultado[f].setServicio(lista_servicio[h])
-                            
+           
+                date_all = re.findall(r"(\d+/\d+/\d+)", lista_mensajes[lista])
+                #print("la fecha es: ",date_all)
+
+                for f in range(len(lista_resultado)):
+                    if lista_resultado[f].getNombre() == empresa:
+                        lista_resultado[f].setFecha(date_all)
 
     for f in range(len(lista_resultado)):
 
@@ -181,16 +190,20 @@ def parseInfo():
 
         lista_resultado[f].setNeutros(contador_neutro)
 
-        total_sentimientos = total_sentimientos+ lista_resultado[f].getPositivos() + lista_resultado[f].getNegativos() + contador_neutro
+        for k in range(len(lista_resultado)):
+            if lista_resultado[f].getFecha()[0] == lista_resultado[k].getFecha()[0]:
+                print("lista_resultado[f].getFecha()[0]: ", lista_resultado[f].getFecha()[0])
+                total_sentimientos = total_sentimientos+ lista_resultado[k].getPositivos() + lista_resultado[k].getNegativos() + contador_neutro
+                print("total de sentimientos iterando en el for ", total_sentimientos)
 
-    #date_all = re.findall(r"(\d+/\d+/\d+)", lista_mensaje[lista])
-    #print(date_all)  
+        print("total de sentimientos en 1 iteracion: ", total_sentimientos)
+        total_sentimientos = 0  
 
     for f in range(len(lista_resultado)):
 
         print("nombre: ", lista_resultado[f].getNombre(), " positivos: ", str(lista_resultado[f].getPositivos()) 
         + " negativos: ", str(lista_resultado[f].getNegativos())," neutros: ", str(lista_resultado[f].getNeutros())
-        + " servicio: ", lista_resultado[f].getServicio().getListaServicio() )
+        + " servicio: ", lista_resultado[f].getServicio().getListaServicio(), " la fecha es: ", lista_resultado[f].getFecha())
 
     print("TOTAL DE SENTIMIENTOS ", total_sentimientos)
     print("CONTADOR NEUTRO ", contador_neutro)

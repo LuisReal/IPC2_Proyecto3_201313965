@@ -1,11 +1,12 @@
 class Mensaje:
-    def __init__(self, nombre_empresa, positivos, negativos, neutros, total, servicio):
+    def __init__(self, nombre_empresa, positivos, negativos, neutros, total, servicio, fecha):
         self.nombre_empresa = nombre_empresa
         self.positivos = positivos
         self.negativos = negativos
         self.neutros = neutros
         self.total = total
         self.servicio = servicio
+        self.fecha = fecha
 
     def getNombre(self):
         return self.nombre_empresa
@@ -25,6 +26,9 @@ class Mensaje:
     def getServicio(self):
         return self.servicio
 
+    def getFecha(self):
+        return self.fecha
+
     def setPositivos(self, positivos):
         self.positivos = positivos
     
@@ -42,3 +46,6 @@ class Mensaje:
     
     def setNombre(self, nombre_empresa):
         self.nombre_empresa = nombre_empresa
+    
+    def setFecha(self, fecha):
+        self.fecha = fecha
