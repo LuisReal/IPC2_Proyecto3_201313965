@@ -1,4 +1,4 @@
-
+import json
 import xml.etree.ElementTree as ET
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -21,22 +21,12 @@ def palabras(requests):
         text = requests.POST.get("textarea1")
         file = requests.FILES['file']
 
-        result = text
-        
         for chunk in file.chunks():
             datos = str(chunk)
         
         
-        archivo = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")
-        
-        root = ET.fromstring(archivo)
-    
-        for dato in root.findall('./diccionario/sentimientos_positivos'): 
-            
-            nombre = dato.find('./palabra').text
-            print("el nombre del sentimiento positivo es: ", nombre)
-        
-        sendInfo(archivo)
+        archivo = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")       
+        result = sendInfo(archivo)#["data"] #primero envia la info y despues obtiene el resultado para enviar a la plantilla
     
     info = datos.replace("\\r\\n", "\r\n")
 
@@ -48,3 +38,4 @@ def sendInfo(archivo):
 
     response = req.post('http://127.0.0.1:5000/palabras', json=data) # se envia a la api de flask
 
+    #return json.loads(response.text) # retorna el dato recibido de la api de flask
