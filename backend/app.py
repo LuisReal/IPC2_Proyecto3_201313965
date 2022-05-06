@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import re
 from datetime import datetime
 from Mensaje import Mensaje
-from Empresa import Empresa
+from Servicio import Servicio
 
 app = Flask(__name__)
 CORS(app)
@@ -38,7 +38,7 @@ def parseInfo():
     contador_positivo=0
     contador_negativo=0
     contador_neutro=0
-    total_mensajes = 0
+    total_sentimientos = 0
 
     lista_positivo = []
     lista_negativo = []
@@ -47,7 +47,7 @@ def parseInfo():
     lista_servicio = []
     lista_alias = []
     lista_resultado = []
-
+    lista_ali = []
     listado_empresas = []
 
     for dato in root.findall('./diccionario/empresas_analizar/empresa/nombre'): 
@@ -58,12 +58,20 @@ def parseInfo():
     for dato in root.findall('./diccionario/empresas_analizar/empresa/servicio'): 
         
         servicio = dato.get('nombre')
-        lista_servicio.append(servicio)
+    
+        for a in dato.findall('./alias'):
+            alias = a.text
+            lista_ali.append(alias)
+            lista_alias.append(alias)
 
-    for dato in root.findall('./diccionario/empresas_analizar/empresa/servicio/alias'): 
-        
-        alias = dato.text
-        lista_alias.append(alias)
+        lista_servicio.append(Servicio(servicio, lista_ali))
+        lista_ali = []
+
+    
+    for i in range(len(lista_servicio)):
+
+        print("\nel nombre del servicio: ",lista_servicio[i].getNombre(), " la lista de servicio ", lista_servicio[i].getListaServicio())
+    print()
 
     for dato in root.findall('./diccionario/sentimientos_positivos/palabra'): 
         
@@ -85,91 +93,106 @@ def parseInfo():
         
         
     
-    print(lista_positivo)
-    print(lista_negativo)
-    print(lista_mensaje)
-    print(lista_empresa)
-    print(lista_servicio)
-    print(lista_alias)
+    #print(lista_positivo)
+    #print(lista_negativo)
+    #print(lista_mensaje)
+    #print(lista_empresa)
+    #print(lista_servicio)
+    #print(lista_alias)
 
     response = []
 
-    print("********************ANALIZANDO LISTAS***********************")
-    lista_prueba = ['USAC']
-    lista_prueba = ['Landivar']
-    print("esta es la lista de pruebas",lista_prueba)
-
     print("********MENSAJES ENCONTRADOS*********")
+    
     
     for lista in range(len(lista_mensaje)):
         
         for empresa in lista_empresa:
             
+            print("*******************ITERACION FOR DE EMPRESA ***************************")
+            print("                     ", empresa, "                 ", str(lista), "     ")
+            
             x = re.findall(empresa, lista_mensaje[lista], flags=re.IGNORECASE)
         
             print("esta es la lista ",x)
-            #print("empresa ", empresa, " lista mensaje ", lista_mensaje[lista])
 
             if len(x) != 0 : # si la lista x no esta vacia
-                lista_resultado.append(Mensaje(empresa,0,0,0,0,""))
-                print("se guardo la empresa ", empresa)
+                if len(lista_resultado) == 0:
+                    lista_resultado.append(Mensaje(empresa,0,0,0,0,""))
+                    print("se guardo la empresa ", empresa)
+                else:
+                    existe_empresa = 0
+                    for m in lista_resultado:
+                        if m.getNombre() == empresa:
+                            print("Ya existe", empresa , "en la lista resultado")
+                            existe_empresa +=1
+                    
+                    if existe_empresa == 0 :
+                        lista_resultado.append(Mensaje(empresa,0,0,0,0,""))
+                        print("se guardo la empresa ", empresa)
 
-            for palabra in lista_positivo:
-                x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)   # devuelve una lista con la palabra encontrada
+                for palabra in lista_positivo:
+                    x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)   # devuelve una lista con la palabra encontrada
             
-                if len(x) != 0:
-                    contador_positivo +=1
+                    if len(x) != 0:
+                        contador_positivo +=1
 
-                response.append({palabra: len(x)})
-        
-            print()
+                        for f in range(len(lista_resultado)):
+                            if lista_resultado[f].getNombre() == empresa:
+                                cont = lista_resultado[f].getPositivos() + contador_positivo
+                                lista_resultado[f].setPositivos(cont)
+                                contador_positivo = 0
 
-            for palabra in lista_negativo:
-                x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)
+                    response.append({palabra: len(x)})
+                print()
+
+                for palabra in lista_negativo:
+                    x = re.findall(palabra, lista_mensaje[lista], flags=re.IGNORECASE)
             
-                if len(x) != 0:
-                    contador_negativo +=1
-            
-            print()
+                    if len(x) != 0:
+                        contador_negativo +=1
 
-            for f in range(len(lista_resultado)):
-                if lista_resultado[f].getNombre() == empresa:
-                    lista_resultado[f].setPositivos(contador_positivo)
-                    lista_resultado[f].setNegativos(contador_negativo)
-                    print("nombre: ", lista_resultado[f].getNombre(), " positivos: ", lista_resultado[f].getPositivos(), " negativos: ", lista_resultado[f].getNegativos())
+                        for f in range(len(lista_resultado)):
+                            if lista_resultado[f].getNombre() == empresa:
+                                cont = lista_resultado[f].getNegativos() + contador_negativo
+                                lista_resultado[f].setNegativos(cont)
+                                contador_negativo = 0
+                
+                print(" EL LISTADO DE ALIAS ES ", lista_alias)
+                for alias in lista_alias:
+                    x = re.findall(alias, lista_mensaje[lista], flags=re.IGNORECASE)
+                    
+                    if len(x) != 0:
+                        print("EL ALIAS ES ", alias)
+                        for f in range(len(lista_resultado)):
+                            if lista_resultado[f].getNombre() == empresa:
+                                print("lista_resultado[f].getNombre()", lista_resultado[f].getNombre())
+                                for h in range(len(lista_servicio)):
+                                    for j in range(len(lista_servicio[h].getListaServicio())):
+                                        if lista_servicio[h].getListaServicio()[j] == alias:
+                                            print("if lista_servicio[h].getListaServicio()[j] == alias", lista_servicio[h].getListaServicio()[j])
+                                            lista_resultado[f].setServicio(lista_servicio[h])
+                            
 
-        '''
-        for servicio in lista_servicio:
-            x = re.findall(servicio, lista_mensaje[lista], flags=re.IGNORECASE)
-            
-            if len(x) != 0 : # si la lista x no esta vacia
-                for a in lista_resultado:
-                    a.setServicio(servicio)
+    for f in range(len(lista_resultado)):
 
-        for alias in lista_alias:
-            x = re.findall(alias, lista_mensaje[lista], flags=re.IGNORECASE)
-        '''
+        if lista_resultado[f].getPositivos() == lista_resultado[f].getNegativos():
+            contador_neutro += 1
 
-    if contador_negativo == contador_positivo:
-        contador_neutro += 1
+        lista_resultado[f].setNeutros(contador_neutro)
 
-    total_mensajes = contador_positivo + contador_negativo + contador_neutro
+        total_sentimientos = total_sentimientos+ lista_resultado[f].getPositivos() + lista_resultado[f].getNegativos() + contador_neutro
 
     #date_all = re.findall(r"(\d+/\d+/\d+)", lista_mensaje[lista])
     #print(date_all)  
 
-        
-    #print("El total de sentimientos recibidos es ", total_mensajes)
-    #print("El valor de contador positivo es ", contador_positivo)
-    #print("El valor de contador negativo es ", contador_negativo)
-    
-    #for i in lista_resultado:
-        #print("nombre: ", i.getNombre(), "total positivos: ", str(i.getPositivos()), " total negativos: ", str(i.getNegativos()))
+    for f in range(len(lista_resultado)):
 
-    '''
-    for i in lista_resultado:
-        for a in lista_empresa:
-            if i.getNombre() == lista_empresa[a]:
-                listado_empresas.append(Empresa(i.getNombre()))
-    '''
+        print("nombre: ", lista_resultado[f].getNombre(), " positivos: ", str(lista_resultado[f].getPositivos()) 
+        + " negativos: ", str(lista_resultado[f].getNegativos())," neutros: ", str(lista_resultado[f].getNeutros())
+        + " servicio: ", lista_resultado[f].getServicio().getListaServicio() )
+
+    print("TOTAL DE SENTIMIENTOS ", total_sentimientos)
+    print("CONTADOR NEUTRO ", contador_neutro)
+
     return {'data': 'hola mundo'}
