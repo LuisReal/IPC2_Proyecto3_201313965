@@ -195,6 +195,8 @@ def parseInfo():
                 print("lista_resultado[f].getFecha()[0]: ", lista_resultado[f].getFecha()[0])
                 total_sentimientos = total_sentimientos+ lista_resultado[k].getPositivos() + lista_resultado[k].getNegativos() + contador_neutro
                 print("total de sentimientos iterando en el for ", total_sentimientos)
+        
+        lista_resultado[f].setTotal(total_sentimientos)
 
         print("total de sentimientos en 1 iteracion: ", total_sentimientos)
         total_sentimientos = 0  
@@ -203,9 +205,24 @@ def parseInfo():
 
         print("nombre: ", lista_resultado[f].getNombre(), " positivos: ", str(lista_resultado[f].getPositivos()) 
         + " negativos: ", str(lista_resultado[f].getNegativos())," neutros: ", str(lista_resultado[f].getNeutros())
-        + " servicio: ", lista_resultado[f].getServicio().getListaServicio(), " la fecha es: ", lista_resultado[f].getFecha())
-
+        + " servicio: ", lista_resultado[f].getServicio().getListaServicio(), " la fecha es: ", lista_resultado[f].getFecha(), " total mensajes: ",str(lista_resultado[f].getTotal()))
+    #str(lista_resultado[f].getNegativos())
     print("TOTAL DE SENTIMIENTOS ", total_sentimientos)
     print("CONTADOR NEUTRO ", contador_neutro)
 
-    return {'data': 'hola mundo'}
+    lista_datos = []
+
+    for f in range(len(lista_resultado)):
+
+        Dato={'Nombre' : lista_resultado[f].getNombre(),
+            'Postivos': str(lista_resultado[f].getPositivos()),
+            'Negativos': str(lista_resultado[f].getNegativos()),
+            'Neutros': str(lista_resultado[f].getNeutros()),
+            'Servicio:': lista_resultado[f].getServicio().getListaServicio(),
+            'Fecha:': lista_resultado[f].getFecha(),
+            'Total:' : str(lista_resultado[f].getTotal()) }  
+
+        lista_datos.append(Dato)
+
+    
+    return {'data': lista_datos}

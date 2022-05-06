@@ -26,7 +26,7 @@ def palabras(requests):
         
         
         archivo = datos.replace('b\'<?xml version="1.0"?>', " ").replace('\'', ' ').replace("\\r\\n", "\r\n")       
-        result = sendInfo(archivo)#["data"] #primero envia la info y despues obtiene el resultado para enviar a la plantilla
+        result = sendInfo(archivo)["data"] #primero envia la info y despues obtiene el resultado para enviar a la plantilla
     
     info = datos.replace("\\r\\n", "\r\n")
 
@@ -38,4 +38,4 @@ def sendInfo(archivo):
 
     response = req.post('http://127.0.0.1:5000/palabras', json=data) # se envia a la api de flask
 
-    #return json.loads(response.text) # retorna el dato recibido de la api de flask
+    return json.loads(response.text) # retorna el dato recibido de la api de flask
